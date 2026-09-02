@@ -30,6 +30,7 @@ class LotMapController extends Controller
             'areas.*.label' => ['required', 'string', 'max:100'],
             'areas.*.x' => ['required', 'numeric', 'between:0,100'],
             'areas.*.y' => ['required', 'numeric', 'between:0,100'],
+            'areas.*.size' => ['nullable', 'numeric', 'between:24,100'],
             'areas.*.block_label' => ['nullable', 'string', 'max:100'],
             'areas.*.lot_id' => ['nullable', 'integer'],
         ]);
@@ -53,6 +54,7 @@ class LotMapController extends Controller
                     'lot_id' => $area['type'] === 'lote' ? ($area['lot_id'] ?? null) : null,
                     'x' => $area['x'],
                     'y' => $area['y'],
+                    'size' => $area['size'] ?? ($area['type'] === 'quadra' ? 42 : 30),
                     'block_label' => $area['block_label'] ?? null,
                     'coordinates' => json_encode(['x' => $area['x'], 'y' => $area['y']]),
                 ]);
