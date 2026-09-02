@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SaleController;
 
 Route::get('/', function () {
     return view('app', [
@@ -16,3 +18,8 @@ Route::get('/', function () {
 });
 
 Route::get('/login', fn () => view('app', ['page' => 'login']));
+
+Route::prefix('api')->group(function () {
+    Route::post('/reservations', [ReservationController::class, 'store']);
+    Route::post('/sales', [SaleController::class, 'store']);
+});

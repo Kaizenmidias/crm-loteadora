@@ -18,4 +18,6 @@ class Lot extends Model
 
     public function development() { return $this->belongsTo(Development::class); }
     public function block() { return $this->belongsTo(Block::class); }
+    public function reservations() { return $this->hasMany(Reservation::class); }
+    public function sales() { return $this->hasMany(Sale::class); }
 }
