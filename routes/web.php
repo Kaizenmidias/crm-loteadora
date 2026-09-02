@@ -10,6 +10,10 @@ use App\Http\Controllers\LeadIntegrationController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
+    if (! auth()->check()) {
+        return redirect('/login');
+    }
+
     return view('app', [
         'page' => 'dashboard',
         'user' => ['name' => 'Lucas Pascoal', 'role' => 'Administrador'],
@@ -22,10 +26,12 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/login', fn () => view('app', ['page' => 'login']));
+Route::get('/login', fn () => auth()->check() ? redirect('/') : view('app', ['page' => 'login']));
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::get('/api/me', [AuthController::class, 'profile'])->middleware('auth');
+Route::patch('/api/profile', [AuthController::class, 'updateProfile'])->middleware('auth');
 
 Route::prefix('api')->group(function () {
     Route::post('/reservations', [ReservationController::class, 'store']);
@@ -40,8 +46,14 @@ Route::prefix('api')->group(function () {
     Route::post('/leads', [LeadIntegrationController::class, 'store'])->middleware('throttle:60,1');
 });
 
-Route::get('/{any}', fn () => view('app', [
+Route::get('/{any}', function () {
+    if (! auth()->check()) {
+        return redirect('/login');
+    }
+
+    return view('app', [
     'page' => 'dashboard',
     'user' => ['name' => 'Lucas Pascoal', 'role' => 'Administrador'],
     'stats' => [],
-]))->where('any', '.*');
+    ]);
+})->where('any', '.*');

@@ -55,4 +55,28 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Sessão encerrada.']);
     }
+
+    public function profile(): JsonResponse
+    {
+        return response()->json(Auth::user());
+    }
+
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . Auth::id()],
+            'password' => ['nullable', 'string', 'min:8'],
+        ]);
+
+        $user = Auth::user();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        if (! empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+        $user->save();
+
+        return response()->json($user);
+    }
 }
