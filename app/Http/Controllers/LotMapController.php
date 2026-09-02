@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class LotMapController extends Controller
 {
-    public function show(Development $development)
+    public function show(int $developmentId)
     {
+        $development = Development::find($developmentId);
+        if (!$development) {
+            return response()->json(['map' => null, 'areas' => []]);
+        }
         $map = $development->maps()->where('is_active', true)->with('areas')->latest()->first();
 
         return response()->json([
@@ -19,7 +23,7 @@ class LotMapController extends Controller
         ]);
     }
 
-    public function store(Request $request, Development $development)
+    public function store(Request $request, int $developmentId)
     {
         $data = $request->validate([
             'name' => ['nullable', 'string', 'max:150'],
@@ -34,6 +38,16 @@ class LotMapController extends Controller
             'areas.*.block_label' => ['nullable', 'string', 'max:100'],
             'areas.*.lot_id' => ['nullable', 'integer'],
         ]);
+
+        $development = Development::find($developmentId);
+        if (!$development) {
+            $development = Development::create([
+                'name' => $data['name'] ?? 'Novo loteamento',
+                'slug' => 'loteamento-'.$developmentId.'-'.uniqid(),
+                'type' => 'loteamento',
+                'status' => 'active',
+            ]);
+        }
 
         $map = DB::transaction(function () use ($data, $development) {
             $map = LotMap::updateOrCreate(
@@ -66,7 +80,7 @@ class LotMapController extends Controller
         return response()->json(['map' => $map, 'areas' => $map->areas]);
     }
 
-    public function upload(Request $request, Development $development)
+    public function upload(Request $request, int $developmentId)
     {
         $request->validate(['image' => ['required', 'image', 'max:10240']]);
         $path = $request->file('image')->store('lot-maps', 'public');

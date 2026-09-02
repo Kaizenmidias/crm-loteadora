@@ -23,9 +23,9 @@ Route::get('/login', fn () => view('app', ['page' => 'login']));
 Route::prefix('api')->group(function () {
     Route::post('/reservations', [ReservationController::class, 'store']);
     Route::post('/sales', [SaleController::class, 'store']);
-    Route::get('/developments/{development}/lot-map', [LotMapController::class, 'show']);
-    Route::post('/developments/{development}/lot-map', [LotMapController::class, 'store']);
-    Route::post('/developments/{development}/lot-map/image', [LotMapController::class, 'upload']);
+    Route::get('/developments/{developmentId}/lot-map', [LotMapController::class, 'show']);
+    Route::post('/developments/{developmentId}/lot-map', [LotMapController::class, 'store']);
+    Route::post('/developments/{developmentId}/lot-map/image', [LotMapController::class, 'upload']);
 });
 
 Route::get('/{any}', fn () => view('app', [
