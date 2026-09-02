@@ -18,4 +18,5 @@ class Development extends Model
 
     public function blocks() { return $this->hasMany(Block::class); }
     public function lots() { return $this->hasMany(Lot::class); }
+    public function maps() { return $this->hasMany(LotMap::class); }
 }
