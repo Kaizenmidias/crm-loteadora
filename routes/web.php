@@ -7,6 +7,7 @@ use App\Http\Controllers\LotMapController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LeadIntegrationController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('app', [
@@ -22,6 +23,9 @@ Route::get('/', function () {
 });
 
 Route::get('/login', fn () => view('app', ['page' => 'login']));
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::prefix('api')->group(function () {
     Route::post('/reservations', [ReservationController::class, 'store']);
