@@ -37,6 +37,12 @@ class LotMapController extends Controller
             'areas.*.size' => ['nullable', 'numeric', 'between:24,100'],
             'areas.*.block_label' => ['nullable', 'string', 'max:100'],
             'areas.*.lot_id' => ['nullable', 'integer'],
+            'areas.*.development_label' => ['nullable', 'string', 'max:150'],
+            'areas.*.address' => ['nullable', 'string', 'max:255'],
+            'areas.*.value' => ['nullable', 'numeric'],
+            'areas.*.area' => ['nullable', 'numeric'],
+            'areas.*.price_per_m2' => ['nullable', 'numeric'],
+            'areas.*.status' => ['nullable', 'string', 'max:30'],
         ]);
 
         $development = Development::find($developmentId);
@@ -70,6 +76,12 @@ class LotMapController extends Controller
                     'y' => $area['y'],
                     'size' => $area['size'] ?? ($area['type'] === 'quadra' ? 42 : 30),
                     'block_label' => $area['block_label'] ?? null,
+                    'development_label' => $area['development_label'] ?? $development->name,
+                    'address' => $area['address'] ?? null,
+                    'value' => $area['value'] ?? null,
+                    'area' => $area['area'] ?? null,
+                    'price_per_m2' => $area['price_per_m2'] ?? null,
+                    'status' => $area['status'] ?? null,
                     'coordinates' => json_encode(['x' => $area['x'], 'y' => $area['y']]),
                 ]);
             }
@@ -86,5 +98,21 @@ class LotMapController extends Controller
         $path = $request->file('image')->store('lot-maps', 'public');
 
         return response()->json(['path' => '/storage/'.$path]);
+    }
+
+    public function updateArea(Request $request, int $areaId)
+    {
+        $area = \App\Models\LotMapArea::findOrFail($areaId);
+        $data = $request->validate([
+            'development_label' => ['required', 'string', 'max:150'],
+            'address' => ['required', 'string', 'max:255'],
+            'value' => ['required', 'numeric', 'min:0'],
+            'area' => ['required', 'numeric', 'min:0'],
+            'status' => ['required', 'string', 'max:30'],
+        ]);
+        $data['price_per_m2'] = $data['area'] > 0 ? round($data['value'] / $data['area'], 2) : 0;
+        $area->update($data);
+
+        return response()->json(['area' => $area->fresh()]);
     }
 }

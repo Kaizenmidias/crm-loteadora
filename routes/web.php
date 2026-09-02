@@ -26,6 +26,7 @@ Route::prefix('api')->group(function () {
     Route::get('/developments/{developmentId}/lot-map', [LotMapController::class, 'show']);
     Route::post('/developments/{developmentId}/lot-map', [LotMapController::class, 'store']);
     Route::post('/developments/{developmentId}/lot-map/image', [LotMapController::class, 'upload']);
+    Route::patch('/lot-map-areas/{areaId}', [LotMapController::class, 'updateArea']);
 });
 
 Route::get('/{any}', fn () => view('app', [
