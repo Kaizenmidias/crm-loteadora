@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\LotMapController;
+use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LeadIntegrationController;
 
 Route::get('/', function () {
     return view('app', [
@@ -27,6 +30,10 @@ Route::prefix('api')->group(function () {
     Route::post('/developments/{developmentId}/lot-map', [LotMapController::class, 'store']);
     Route::post('/developments/{developmentId}/lot-map/image', [LotMapController::class, 'upload']);
     Route::patch('/lot-map-areas/{areaId}', [LotMapController::class, 'updateArea']);
+    Route::get('/materials', [MaterialController::class, 'index']);
+    Route::post('/materials', [MaterialController::class, 'store']);
+    Route::get('/reports/summary', [ReportController::class, 'summary']);
+    Route::post('/leads', [LeadIntegrationController::class, 'store'])->middleware('throttle:60,1');
 });
 
 Route::get('/{any}', fn () => view('app', [
