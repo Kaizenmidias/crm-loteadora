@@ -23,3 +23,9 @@ Route::prefix('api')->group(function () {
     Route::post('/reservations', [ReservationController::class, 'store']);
     Route::post('/sales', [SaleController::class, 'store']);
 });
+
+Route::get('/{any}', fn () => view('app', [
+    'page' => 'dashboard',
+    'user' => ['name' => 'Lucas Pascoal', 'role' => 'Administrador'],
+    'stats' => [],
+]))->where('any', '.*');
