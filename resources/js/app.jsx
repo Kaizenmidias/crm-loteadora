@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Activity, ArrowUpRight, BarChart3, Bell, Building2, CalendarDays, Check, ChevronDown, CircleDollarSign, ClipboardList, ContactRound, FileText, HelpCircle, LayoutDashboard, Map, Menu, MoreHorizontal, Pencil, Plus, Search, Settings, ShieldCheck, Sparkles, Upload, UserRound, Users, X } from 'lucide-react';
 
-const iconMap = { dashboard: LayoutDashboard, developments: Building2, blocks: Map, lots: Map, leads: Users, pipeline: Activity, clients: ContactRound, brokers: UserRound, activities: CalendarDays, sales: CircleDollarSign, tasks: ClipboardList, reports: BarChart3 };
+const iconMap = { dashboard: LayoutDashboard, developments: Building2, blocks: Map, lots: Map, leads: Users, pipeline: Activity, clients: ContactRound, brokers: UserRound, activities: CalendarDays, reservations: ClipboardList, sales: CircleDollarSign, tasks: ClipboardList, reports: BarChart3 };
 const menuGroups = [
     { label: 'VISAO GERAL', items: [{ id: 'dashboard', label: 'Visao geral' }] },
     { label: 'IMOBILIARIO', items: [{ id: 'developments', label: 'Empreendimentos' }, { id: 'blocks', label: 'Quadras' }, { id: 'lots', label: 'Lotes' }] },
