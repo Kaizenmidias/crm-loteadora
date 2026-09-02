@@ -104,12 +104,14 @@ class LotMapController extends Controller
     {
         $area = \App\Models\LotMapArea::findOrFail($areaId);
         $data = $request->validate([
-            'development_label' => ['required', 'string', 'max:150'],
-            'address' => ['required', 'string', 'max:255'],
+            'development_label' => ['nullable', 'string', 'max:150'],
+            'address' => ['nullable', 'string', 'max:255'],
             'value' => ['required', 'numeric', 'min:0'],
             'area' => ['required', 'numeric', 'min:0'],
             'status' => ['required', 'string', 'max:30'],
         ]);
+        $data['development_label'] = $data['development_label'] ?? $area->development_label ?? $area->map?->development?->name ?? 'Loteamento';
+        $data['address'] = $data['address'] ?? $area->address;
         $data['price_per_m2'] = $data['area'] > 0 ? round($data['value'] / $data['area'], 2) : 0;
         $area->update($data);
 
