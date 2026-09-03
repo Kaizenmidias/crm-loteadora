@@ -34,6 +34,8 @@ Route::get('/api/me', [AuthController::class, 'profile'])->middleware('auth');
 Route::patch('/api/profile', [AuthController::class, 'updateProfile'])->middleware('auth');
 
 Route::prefix('api')->middleware('auth')->group(function () {
+    Route::get('/leads', [LeadIntegrationController::class, 'index'])->middleware('permission:leads');
+    Route::patch('/leads/{lead}', [LeadIntegrationController::class, 'update'])->middleware('permission:leads');
     Route::post('/reservations', [ReservationController::class, 'store'])->middleware('permission:reservations');
     Route::post('/sales', [SaleController::class, 'store'])->middleware('permission:sales');
     Route::get('/developments/{developmentId}/lot-map', [LotMapController::class, 'show'])->middleware('permission:lot-map');
@@ -65,8 +67,8 @@ Route::get('/{any}', function () {
     abort_unless(auth()->user()->canAccess($permission), 403);
 
     return view('app', [
-    'page' => 'dashboard',
-    'user' => auth()->user()->only(['id', 'name', 'email', 'role', 'permissions']),
-    'stats' => [],
+        'page' => $permission,
+        'user' => auth()->user()->only(['id', 'name', 'email', 'role', 'permissions']),
+        'stats' => [],
     ]);
 })->where('any', '.*');
